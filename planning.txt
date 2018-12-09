@@ -1,0 +1,22 @@
+- Start with the actual gameplay, then move to Twitch integration
+
+Gameplay
+  - Player walks across level
+    - Attacks bad guys they come across
+    - Picks up loot from chests they run into
+    - Exits to the next level when they reach the end
+
+PLAYER
+  - Stats (tied to gear)
+    * Attack
+    * Defense
+  - Gold
+  - One time use items
+  - Exp
+
+ENEMIES
+  - Randomly generated
+  - Boss at end of every 5 levels
+
+SHOP
+  - There should be a shop for players to spend their coin
