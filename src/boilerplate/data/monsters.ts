@@ -3,6 +3,7 @@ export interface IMonsterData {
   hp: number;
   spriteKey: string;
   enemyType: string;
+  attack: number;
 }
 
 const data = [
@@ -10,13 +11,15 @@ const data = [
     enemyType: "goblin",
     name: "Goblin",
     hp: 10,
-    spriteKey: "goblin"
+    spriteKey: "goblin",
+    attack: 2
   },
   {
     enemyType: "orc",
     name: "Orc",
     hp: 20,
-    spriteKey: "orc"
+    spriteKey: "orc",
+    attack: 4
   }
 ];
 

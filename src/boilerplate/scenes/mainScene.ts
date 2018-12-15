@@ -13,11 +13,12 @@ const ATTACK_COOLDOWN = 2000;
 export class MainScene extends Phaser.Scene {
   private player: Player;
   private enemies: Phaser.Physics.Arcade.StaticGroup;
+  private engagedEnemy: Enemy;
 
   private state: State;
 
   private attackOnCooldown: boolean;
-  private attackCooldownTimer: number;
+  private attackCooldownTimer: number = 0;
 
   constructor() {
     super({
@@ -87,11 +88,8 @@ export class MainScene extends Phaser.Scene {
 
   setupCollision() {
     console.log("setting up collision", this.enemies);
-    this.physics.add.collider(this.player, this.enemies, (obj1, obj2) => {
-      console.log("player hit enemy");
-      console.log("obj1:", obj1);
-      console.log("obj2:", obj2);
-
+    this.physics.add.collider(this.player, this.enemies, (_, enemy: Enemy) => {
+      this.engagedEnemy = enemy;
       this.state = State.COMBAT;
     });
   }
@@ -101,16 +99,17 @@ export class MainScene extends Phaser.Scene {
   }
 
   handleAttackState(deltaTime) {
-    if (!this.attackOnCooldown) {
-      console.log("Player and enemies attack each other!");
+    if (this.attackCooldownTimer <= 0) {
+      const enemyDied = this.engagedEnemy.takeDamage(this.player.attack);
+      const playerDied = this.player.takeDamage(this.engagedEnemy.attack);
 
-      this.attackOnCooldown = true;
+      if (enemyDied) {
+        this.state = State.MOVING;
+      }
+
       this.attackCooldownTimer = ATTACK_COOLDOWN;
     } else {
       this.attackCooldownTimer -= deltaTime;
-      if (this.attackCooldownTimer <= 0) {
-        this.attackOnCooldown = false;
-      }
     }
   }
 
@@ -120,14 +119,20 @@ export class MainScene extends Phaser.Scene {
     this.setupCollision();
   }
 
-  update(_, deltaTime): void {
+  update(_, deltaTime: number): void {
     switch (this.state) {
       case State.COMBAT: {
         this.handleAttackState(deltaTime);
+        break;
       }
 
       case State.MOVING: {
+        this.player.body.velocity.x = 100;
+        break;
       }
+
+      default:
+        return;
     }
   }
 }
