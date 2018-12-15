@@ -17,7 +17,6 @@ export class MainScene extends Phaser.Scene {
 
   private state: State;
 
-  private attackOnCooldown: boolean;
   private attackCooldownTimer: number = 0;
 
   constructor() {
@@ -26,7 +25,6 @@ export class MainScene extends Phaser.Scene {
     });
 
     this.state = State.MOVING;
-    this.attackOnCooldown = false;
   }
 
   preload(): void {
@@ -38,6 +36,15 @@ export class MainScene extends Phaser.Scene {
 
     this.load.image("default-tiles", "./assets/images/tilemap.png");
     this.load.tilemapTiledJSON("map", "./assets/maps/default.json");
+
+    // Load in the CSS needed for fonts
+    const styleElement = document.createElement("style");
+    document.head.appendChild(styleElement);
+    const sheet = styleElement.sheet as CSSStyleSheet;
+
+    const fontStyles =
+      '@font-face {font-family: "mono-pixel"; src url("assets/font/pixel_mono.ttf") format("truetype"); }';
+    sheet.insertRule(fontStyles);
   }
 
   // Load the tilemap and any objects within it
@@ -132,7 +139,9 @@ export class MainScene extends Phaser.Scene {
       }
 
       default:
-        return;
+        break;
     }
+
+    this.player.update();
   }
 }
