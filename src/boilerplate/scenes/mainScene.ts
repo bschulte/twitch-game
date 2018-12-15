@@ -1,4 +1,5 @@
 import Player from "../sprites/Player";
+import Enemy from "../sprites/Enemy";
 import { getObjectName, getEnemyType } from "../util/tiledHelpers";
 import { getMonsterData } from "../data/monsters";
 
@@ -72,26 +73,20 @@ export class MainScene extends Phaser.Scene {
 
   createPlayer(player) {
     this.player = new Player(this, player.x, player.y, "player");
-    this.physics.add.existing(this.player);
-
-    this.player.setVelocityX(100);
   }
 
   createEnemy(enemy) {
     const enemyType = getEnemyType(enemy);
     const monsterInfo = getMonsterData(enemyType);
 
-    const newEnemy = this.enemies.create(
-      enemy.x,
-      enemy.y,
-      monsterInfo.spriteKey
-    );
+    const newEnemy = new Enemy(this, enemy.x, enemy.y, monsterInfo);
+    this.enemies.add(newEnemy);
 
     newEnemy.hp = monsterInfo.hp;
-    newEnemy.monsterName = monsterInfo.name;
   }
 
   setupCollision() {
+    console.log("setting up collision", this.enemies);
     this.physics.add.collider(this.player, this.enemies, (obj1, obj2) => {
       console.log("player hit enemy");
       console.log("obj1:", obj1);
@@ -129,6 +124,9 @@ export class MainScene extends Phaser.Scene {
     switch (this.state) {
       case State.COMBAT: {
         this.handleAttackState(deltaTime);
+      }
+
+      case State.MOVING: {
       }
     }
   }

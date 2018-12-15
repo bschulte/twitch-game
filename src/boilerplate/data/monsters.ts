@@ -1,4 +1,4 @@
-interface IMonsterData {
+export interface IMonsterData {
   name: string;
   hp: number;
   spriteKey: string;
